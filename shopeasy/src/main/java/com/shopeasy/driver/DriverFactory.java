@@ -11,11 +11,15 @@ public class DriverFactory {
 
     public static WebDriver createDriver(String browser) {
         // GitHub Actions tự động set CI=true
+        // Máy CI không có màn hình → bắt buộc headless
         boolean isCI = System.getenv("CI") != null;
+
+        System.out.println("[DriverFactory] Browser: " + browser
+                + " | CI mode: " + isCI);
 
         return switch (browser.toLowerCase()) {
             case "firefox" -> createFirefoxDriver(isCI);
-            default       -> createChromeDriver(isCI);
+            default        -> createChromeDriver(isCI);
         };
     }
 
@@ -24,14 +28,15 @@ public class DriverFactory {
         ChromeOptions options = new ChromeOptions();
 
         if (headless) {
+            // 3 dòng này BẮT BUỘC trên Linux CI
             options.addArguments("--headless=new");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--window-size=1920,1080");
-            System.out.println("[Driver] Chrome HEADLESS (CI mode)");
+            System.out.println("[Driver] Chrome HEADLESS");
         } else {
             options.addArguments("--start-maximized");
-            System.out.println("[Driver] Chrome bình thường (Local)");
+            System.out.println("[Driver] Chrome bình thường");
         }
         return new ChromeDriver(options);
     }
@@ -41,6 +46,7 @@ public class DriverFactory {
         FirefoxOptions options = new FirefoxOptions();
         if (headless) {
             options.addArguments("-headless");
+            System.out.println("[Driver] Firefox HEADLESS");
         }
         return new FirefoxDriver(options);
     }
