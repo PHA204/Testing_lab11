@@ -33,4 +33,12 @@ public class LoginTest extends BaseTest {
             loginPage.getErrorMessage().contains("Username is required")
         );
     }
+    
+    @Test(groups = {"smoke"}, description = "Test fail cố ý để demo CI")
+    public void testIntentionalFail() {
+        // Assert sai để pipeline báo đỏ
+        Assert.assertEquals("actual_value", "expected_value",
+            "Test này fail cố ý để demo CI pipeline");
+    }
+
 }
